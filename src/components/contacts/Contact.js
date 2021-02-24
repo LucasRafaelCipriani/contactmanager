@@ -3,9 +3,12 @@ import PropTypes from 'prop-types';
 import { Consumer } from '../../context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
+  faPencilAlt,
   faSortDown,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export default class Contact extends Component {
   state = {
@@ -16,8 +19,13 @@ export default class Contact extends Component {
     this.setState({ showContactInfo: !this.state.showContactInfo });
   };
 
-  onDeleteClick = (id, dispatch) => {
-    dispatch({ type: 'DELETE_CONTACT', payload: id });
+  onDeleteClick = async (id, dispatch) => {
+    try {
+      await axios.delete(`https://jsonplaceholder.typicode.com/users/${id}`);
+      dispatch({ type: 'DELETE_CONTACT', payload: id });
+    } catch (err) {
+      dispatch({ type: 'DELETE_CONTACT', payload: id });
+    }
   };
   render() {
     return (
@@ -40,6 +48,17 @@ export default class Contact extends Component {
                   onClick={this.onDeleteClick.bind(this, id, dispatch)}
                   style={{ cursor: 'pointer', float: 'right', color: 'red' }}
                 />
+                <Link to={`/contact/edit/${id}`}>
+                  <FontAwesomeIcon
+                    icon={faPencilAlt}
+                    style={{
+                      cursor: 'pointer',
+                      float: 'right',
+                      color: 'black',
+                      marginRight: '1rem',
+                    }}
+                  />
+                </Link>
               </h4>
               {showContactInfo ? (
                 <ul className="list-group">

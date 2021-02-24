@@ -3,13 +3,22 @@ import { Consumer } from '../../context';
 import TextInputGroup from '../layout/TextInputGroup';
 import axios from 'axios';
 
-export default class AddContact extends Component {
+export default class EditContact extends Component {
   state = {
     name: '',
     email: '',
     phone: '',
     errors: {},
   };
+
+  async componentDidMount() {
+    const { id } = this.props.match.params;
+    const res = await axios.get(
+      `https://jsonplaceholder.typicode.com/users/${id}`
+    );
+    const { name, email, phone } = res.data;
+    this.setState({ name: name, email: email, phone: phone });
+  }
 
   onChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
@@ -44,19 +53,19 @@ export default class AddContact extends Component {
       return;
     }
 
-    const newContact = {
+    const { id } = this.props.match.params;
+    const updContact = {
       name,
       email,
       phone,
     };
-
-    const res = await axios.post(
-      'https://jsonplaceholder.typicode.com/users',
-      newContact
+    const res = await axios.put(
+      `https://jsonplaceholder.typicode.com/users/${id}`,
+      updContact
     );
 
     dispatch({
-      type: 'ADD_CONTACT',
+      type: 'UPDATE_CONTACT',
       payload: res.data,
     });
 
@@ -77,7 +86,7 @@ export default class AddContact extends Component {
           const { dispatch } = value;
           return (
             <div className="card mb-3">
-              <div className="card-header">Add Contact</div>
+              <div className="card-header">Edit Contact</div>
               <div className="card-body">
                 <form onSubmit={this.onSubmit.bind(this, dispatch)}>
                   <TextInputGroup
@@ -107,7 +116,7 @@ export default class AddContact extends Component {
                   />
                   <input
                     type="submit"
-                    value="Add Contact"
+                    value="Update Contact"
                     className="btn btn-block btn-light"
                   />
                 </form>
