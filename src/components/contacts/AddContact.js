@@ -62,6 +62,8 @@ export default class AddContact extends Component {
       phone: '',
       errors: {},
     });
+
+    this.props.history.push('/');
   };
   render() {
     const { name, email, phone, errors } = this.state;

@@ -3,8 +3,6 @@ import PropTypes from 'prop-types';
 import { Consumer } from '../../context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
-  faCoffee,
-  faPlus,
   faSortDown,
   faTimes,
 } from '@fortawesome/free-solid-svg-icons';
