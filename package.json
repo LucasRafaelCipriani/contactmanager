@@ -1,7 +1,8 @@
 {
   "name": "contactmanager",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
+  "homepage": "https://lucasrafaelcipriani.github.io/contactmanager/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.34",
     "@fortawesome/free-brands-svg-icons": "^5.15.2",
@@ -14,6 +15,7 @@
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
     "classnames": "^2.2.6",
+    "gh-pages": "^3.1.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-router-dom": "^5.2.0",
@@ -22,6 +24,7 @@
     "web-vitals": "^1.1.0"
   },
   "scripts": {
+    "deploy": "npm run build&&gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
