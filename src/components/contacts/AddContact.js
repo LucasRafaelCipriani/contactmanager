@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Consumer } from '../../context';
 import TextInputGroup from '../layout/TextInputGroup';
 import axios from 'axios';
+import { connect } from 'react-redux';
+import { addContact } from '../../actions/contactActions';
+import PropTypes from 'prop-types';
 
-export default class AddContact extends Component {
+class AddContact extends Component {
   state = {
     name: '',
     email: '',
@@ -15,7 +17,7 @@ export default class AddContact extends Component {
     this.setState({ [e.target.name]: e.target.value });
   };
 
-  onSubmit = async (dispatch, e) => {
+  onSubmit = (e) => {
     e.preventDefault();
     const { name, email, phone } = this.state;
 
@@ -50,15 +52,7 @@ export default class AddContact extends Component {
       phone,
     };
 
-    const res = await axios.post(
-      'https://jsonplaceholder.typicode.com/users',
-      newContact
-    );
-
-    dispatch({
-      type: 'ADD_CONTACT',
-      payload: res.data,
-    });
+    this.props.addContact(newContact);
 
     this.setState({
       name: '',
@@ -72,50 +66,49 @@ export default class AddContact extends Component {
   render() {
     const { name, email, phone, errors } = this.state;
     return (
-      <Consumer>
-        {(value) => {
-          const { dispatch } = value;
-          return (
-            <div className="card mb-3">
-              <div className="card-header">Add Contact</div>
-              <div className="card-body">
-                <form onSubmit={this.onSubmit.bind(this, dispatch)}>
-                  <TextInputGroup
-                    label="Name"
-                    name="name"
-                    value={name}
-                    placeholder="Enter Name..."
-                    onChange={this.onChange}
-                    error={errors.name}
-                  />
-                  <TextInputGroup
-                    label="Email"
-                    name="email"
-                    value={email}
-                    type="email"
-                    placeholder="Enter Email..."
-                    onChange={this.onChange}
-                    error={errors.email}
-                  />
-                  <TextInputGroup
-                    label="Phone"
-                    name="phone"
-                    value={phone}
-                    placeholder="Enter Phone..."
-                    onChange={this.onChange}
-                    error={errors.phone}
-                  />
-                  <input
-                    type="submit"
-                    value="Add Contact"
-                    className="btn btn-block btn-light"
-                  />
-                </form>
-              </div>
-            </div>
-          );
-        }}
-      </Consumer>
+      <div className="card mb-3">
+        <div className="card-header">Add Contact</div>
+        <div className="card-body">
+          <form onSubmit={this.onSubmit}>
+            <TextInputGroup
+              label="Name"
+              name="name"
+              value={name}
+              placeholder="Enter Name..."
+              onChange={this.onChange}
+              error={errors.name}
+            />
+            <TextInputGroup
+              label="Email"
+              name="email"
+              value={email}
+              type="email"
+              placeholder="Enter Email..."
+              onChange={this.onChange}
+              error={errors.email}
+            />
+            <TextInputGroup
+              label="Phone"
+              name="phone"
+              value={phone}
+              placeholder="Enter Phone..."
+              onChange={this.onChange}
+              error={errors.phone}
+            />
+            <input
+              type="submit"
+              value="Add Contact"
+              className="btn btn-block btn-light"
+            />
+          </form>
+        </div>
+      </div>
     );
   }
 }
+
+AddContact.propTypes = {
+  addContact: PropTypes.func.isRequired,
+};
+
+export default connect(null, { addContact })(AddContact);
